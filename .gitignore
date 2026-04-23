@@ -1,0 +1,12 @@
+node_modules/
+dist/
+__pycache__/
+.venv/
+.env
+*.pyc
+.DS_Store
+frontend/dist
+backend/__pycache__
+backend/.venv
+rebuild_backend.py
+rebuild_frontend.py
