@@ -1,8 +1,6 @@
 # Social Graph Nexus
 **Interactive graph theory explorer featuring social network visualization and GNN-based node embeddings.**
 
-https://github.com/user-attachments/assets/9f0a9154-0a2b-4d7c-a2b4-c393a9db3a38
-
 ## Key Features
 * **Interactive Graph Visualization:** Force-directed canvas renderer for exploring social connections across communities.
 * **Automated Matrix Computation:** Real-time generation of Adjacency, Degree, Laplacian, and Incidence matrices with weighted/unweighted toggles.
