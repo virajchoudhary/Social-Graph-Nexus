@@ -2,6 +2,8 @@ import { useState, useEffect, useRef } from 'react'
 
 const COMM_COLORS = { tech: '#ffffff', arts: '#6b7280', science: '#404040' }
 
+import { fetchFromApi } from '../api'
+
 export default function NodeEmbeddings({ api }) {
   const [nodes, setNodes] = useState([])
   const [selectedId, setSelectedId] = useState(null)
@@ -10,20 +12,35 @@ export default function NodeEmbeddings({ api }) {
   const canvasRef = useRef(null)
 
   useEffect(() => {
-    fetch(`${api}/nodes`).then(r => r.json()).then(n => {
-      setNodes(n)
-      if (n.length > 0) setSelectedId(n[0].id)
-    })
-  }, [api])
+    fetchFromApi('/nodes')
+      .then(n => {
+        if (n) {
+          setNodes(n)
+          if (n.length > 0) setSelectedId(n[0].id)
+        }
+      })
+      .catch(err => console.error("Failed to fetch nodes:", err))
+  }, [])
 
   useEffect(() => {
     if (selectedId === null) return
+    let isMounted = true
     setLoading(true)
-    fetch(`${api}/embedding/${selectedId}`)
-      .then(r => r.json())
-      .then(d => { setData(d); setLoading(false) })
-      .catch(() => setLoading(false))
-  }, [api, selectedId])
+    fetchFromApi(`/embedding/${selectedId}`)
+      .then(d => {
+        if (isMounted && d) {
+          setData(d)
+          setLoading(false)
+        }
+      })
+      .catch(err => {
+        if (isMounted) {
+          console.error("Failed to fetch embedding:", err)
+          setLoading(false)
+        }
+      })
+    return () => { isMounted = false }
+  }, [selectedId])
 
   // draw ego graph
   useEffect(() => {

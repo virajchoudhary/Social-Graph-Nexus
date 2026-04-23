@@ -7,6 +7,8 @@ const MATRIX_TYPES = [
   { id: 'incidence', label: 'Incidence' },
 ]
 
+import { fetchFromApi } from '../api'
+
 export default function GraphMatrices({ api }) {
   const [selected, setSelected] = useState('adjacency')
   const [weighted, setWeighted] = useState(false)
@@ -14,14 +16,27 @@ export default function GraphMatrices({ api }) {
   const [loading, setLoading] = useState(false)
 
   useEffect(() => {
+    let isMounted = true
     setData(null)
     setLoading(true)
+    
     const params = selected !== 'incidence' ? `?weighted=${weighted}` : ''
-    fetch(`${api}/matrix/${selected}${params}`)
-      .then(r => r.json())
-      .then(d => { setData(d); setLoading(false) })
-      .catch(() => setLoading(false))
-  }, [api, selected, weighted])
+    fetchFromApi(`/matrix/${selected}${params}`)
+      .then(d => {
+        if (isMounted) {
+          setData(d)
+          setLoading(false)
+        }
+      })
+      .catch(err => {
+        if (isMounted) {
+          console.error("Failed to fetch matrix:", err)
+          setLoading(false)
+        }
+      })
+      
+    return () => { isMounted = false }
+  }, [selected, weighted])
 
   const isIncidence = selected === 'incidence'
   const rowLabels = isIncidence ? data?.node_labels : data?.labels

@@ -6,13 +6,13 @@ import NodeEmbeddings from './components/NodeEmbeddings'
 import Footer from './components/Footer'
 import './App.css'
 
-const API = 'http://127.0.0.1:8000'
+import { API_BASE_URL } from './api'
 
 const tabs = [
   { id: 'theory', label: 'Theory', component: <TheorySection /> },
-  { id: 'network', label: 'Network', component: <NetworkViewer api={API} /> },
-  { id: 'matrices', label: 'Matrices', component: <GraphMatrices api={API} /> },
-  { id: 'embeddings', label: 'Embeddings', component: <NodeEmbeddings api={API} /> },
+  { id: 'network', label: 'Network', component: <NetworkViewer api={API_BASE_URL} /> },
+  { id: 'matrices', label: 'Matrices', component: <GraphMatrices api={API_BASE_URL} /> },
+  { id: 'embeddings', label: 'Embeddings', component: <NodeEmbeddings api={API_BASE_URL} /> },
 ]
 
 export default function App() {

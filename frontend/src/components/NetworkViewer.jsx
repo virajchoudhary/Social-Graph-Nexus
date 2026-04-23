@@ -2,6 +2,8 @@ import { useState, useEffect, useRef, useCallback } from 'react'
 
 const COMMUNITY_COLORS = { tech: '#ffffff', arts: '#6b7280', science: '#404040' }
 
+import { fetchFromApi } from '../api'
+
 export default function NetworkViewer({ api }) {
   const [graph, setGraph] = useState(null)
   const [tooltip, setTooltip] = useState(null)
@@ -11,8 +13,12 @@ export default function NetworkViewer({ api }) {
   const animRef = useRef(null)
 
   useEffect(() => {
-    fetch(`${api}/graph`).then(r => r.json()).then(setGraph)
-  }, [api])
+    fetchFromApi('/graph')
+      .then(d => {
+        if (d) setGraph(d)
+      })
+      .catch(err => console.error("Failed to fetch graph:", err))
+  }, [])
 
   const simulate = useCallback(() => {
     if (!graph || !canvasRef.current) return
